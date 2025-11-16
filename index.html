@@ -420,6 +420,13 @@
                 menu.classList.remove('active');
             }
         });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.mobile-menu nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobileMenu').classList.remove('active');
+            });
+        });
     </script>
 </body>
 </html>
