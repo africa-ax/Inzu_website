@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INZU - Construction Blogs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        header {
+            background: #00A651;
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            display: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s;
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            background: #00A651;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .mobile-menu nav {
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .mobile-menu nav a {
+            color: #333;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            color: #00A651;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+
+        .blogs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #e0e0e0;
+        }
+
+        .blog-content {
+            padding: 20px;
+        }
+
+        .blog-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .blog-preview {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+
+        .read-more-btn {
+            background: #00A651;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .no-blogs {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .blogs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">INZU</div>
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="professionals.html">Professionals</a>
+                <a href="services.html">Services</a>
+                <a href="jobs.html">Jobs Board</a>
+                <a href="index.html#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="logo">INZU</div>
+            <button class="close-btn" onclick="toggleMenu()">×</button>
+        </div>
+        <nav>
+            <a href="index.html" onclick="toggleMenu()">Home</a>
+            <a href="blogs.html" onclick="toggleMenu()">Blogs</a>
+            <a href="professionals.html" onclick="toggleMenu()">Professionals</a>
+            <a href="services.html" onclick="toggleMenu()">Services</a>
+            <a href="jobs.html" onclick="toggleMenu()">Jobs Board</a>
+            <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">Construction Insights & Tips</h1>
+        <p class="page-subtitle">Expert advice and updates from INZU</p>
+        
+        <div id="blogsContainer" class="blogs-grid">
+            <div class="loading">Loading blogs...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, orderBy, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8RRcGRfT3NW_u8j5Fqw0yN2EpjmNUoXg",
+            authDomain: "shyaka-87ea8.firebaseapp.com",
+            projectId: "shyaka-87ea8",
+            storageBucket: "shyaka-87ea8.firebasestorage.app",
+            messagingSenderId: "482987054954",
+            appId: "1:482987054954:web:dbbce95e72104f52d87713",
+            measurementId: "G-H3RLQ2PY6J"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadBlogs() {
+            const container = document.getElementById('blogsContainer');
+            
+            try {
+                const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    container.innerHTML = '<div class="no-blogs">No blogs available yet. Check back soon!</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+
+                snapshot.forEach(doc => {
+                    const blog = doc.data();
+                    const blogCard = createBlogCard(doc.id, blog);
+                    container.appendChild(blogCard);
+                });
+            } catch (error) {
+                console.error('Error loading blogs:', error);
+                container.innerHTML = '<div class="no-blogs">Error loading blogs. Please try again later.</div>';
+            }
+        }
+
+        function createBlogCard(id, blog) {
+            const card = document.createElement('div');
+            card.className = 'blog-card';
+            card.onclick = () => window.location.href = `blog.html?id=${id}`;
+
+            const preview = blog.content.substring(0, 150) + (blog.content.length > 150 ? '...' : '');
+            
+            const date = blog.timestamp ? new Date(blog.timestamp.seconds * 1000).toLocaleDateString() : 'Recent';
+
+            card.innerHTML = `
+                ${blog.imageUrl ? `<img src="${blog.imageUrl}" alt="${blog.title}" class="blog-image">` : '<div class="blog-image"></div>'}
+                <div class="blog-content">
+                    <h2 class="blog-title">${blog.title}</h2>
+                    <div class="blog-meta">
+                        <span>📅 ${date}</span>
+                        <span>✍️ ${blog.author || 'INZU Team'}</span>
+                    </div>
+                    <p class="blog-preview">${preview}</p>
+                    <button class="read-more-btn">Read More →</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        loadBlogs();
+    </script>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobileMenu');
+            const menuBtn = document.querySelector('.menu-btn');
+            
+            if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+
+        document.querySelectorAll('.mobile-menu nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobileMenu').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
