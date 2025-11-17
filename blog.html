@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INZU - Blog Article</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        header {
+            background: #00A651;
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            display: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s;
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            background: #00A651;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .mobile-menu nav {
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .mobile-menu nav a {
+            color: #333;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            background: #00A651;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .article {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .article-title {
+            font-size: 36px;
+            color: #00A651;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 20px;
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+
+        .article-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .article-content {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #444;
+            white-space: pre-wrap;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .article {
+                padding: 20px;
+            }
+
+            .article-title {
+                font-size: 28px;
+            }
+
+            .article-content {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">INZU</div>
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="professionals.html">Professionals</a>
+                <a href="services.html">Services</a>
+                <a href="jobs.html">Jobs Board</a>
+                <a href="index.html#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="logo">INZU</div>
+            <button class="close-btn" onclick="toggleMenu()">×</button>
+        </div>
+        <nav>
+            <a href="index.html" onclick="toggleMenu()">Home</a>
+            <a href="blogs.html" onclick="toggleMenu()">Blogs</a>
+            <a href="professionals.html" onclick="toggleMenu()">Professionals</a>
+            <a href="services.html" onclick="toggleMenu()">Services</a>
+            <a href="jobs.html" onclick="toggleMenu()">Jobs Board</a>
+            <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <button class="back-btn" onclick="window.location.href='blogs.html'">← Back to Blogs</button>
+        
+        <div id="articleContainer">
+            <div class="loading">Loading article...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8RRcGRfT3NW_u8j5Fqw0yN2EpjmNUoXg",
+            authDomain: "shyaka-87ea8.firebaseapp.com",
+            projectId: "shyaka-87ea8",
+            storageBucket: "shyaka-87ea8.firebasestorage.app",
+            messagingSenderId: "482987054954",
+            appId: "1:482987054954:web:dbbce95e72104f52d87713",
+            measurementId: "G-H3RLQ2PY6J"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadArticle() {
+            const container = document.getElementById('articleContainer');
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+
+            if (!postId) {
+                container.innerHTML = '<div class="loading">Article not found.</div>';
+                return;
+            }
+
+            try {
+                const docRef = doc(db, 'posts', postId);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    container.innerHTML = '<div class="loading">Article not found.</div>';
+                    return;
+                }
+
+                const blog = docSnap.data();
+                const date = blog.timestamp ? new Date(blog.timestamp.seconds * 1000).toLocaleDateString() : 'Recent';
+
+                container.innerHTML = `
+                    <article class="article">
+                        <h1 class="article-title">${blog.title}</h1>
+                        <div class="article-meta">
+                            <span>📅 ${date}</span>
+                            <span>✍️ ${blog.author || 'INZU Team'}</span>
+                        </div>
+                        ${blog.imageUrl ? `<img src="${blog.imageUrl}" alt="${blog.title}" class="article-image">` : ''}
+                        <div class="article-content">${blog.content}</div>
+                    </article>
+                `;
+
+                document.title = `${blog.title} - INZU`;
+            } catch (error) {
+                console.error('Error loading article:', error);
+                container.innerHTML = '<div class="loading">Error loading article. Please try again later.</div>';
+            }
+        }
+
+        loadArticle();
+    </script>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobileMenu');
+            const menuBtn = document.querySelector('.menu-btn');
+            
+            if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.mobile-menu nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobileMenu').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
