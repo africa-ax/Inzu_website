@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INZU - Find Professionals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        header {
+            background: #00A651;
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            display: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s;
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            background: #00A651;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+.mobile-menu nav {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.mobile-menu nav a {
+    display: block;
+    color: #333;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            color: #00A651;
+            margin-bottom: 10px;
+        }
+
+        .register-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .register-btn {
+            background: #00A651;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .search-filters {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input,
+        .search-bar select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 15px 30px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #00A651;
+            border-bottom-color: #00A651;
+        }
+
+        .professionals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .professional-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge.verified {
+            background: #00A651;
+            color: white;
+        }
+
+        .badge.unverified {
+            background: #FFA500;
+            color: white;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .profile-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #e0e0e0;
+        }
+
+        .profile-info h3 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .profile-info .service {
+            color: #00A651;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .profile-info .district {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stars {
+            color: #FFD700;
+            font-size: 18px;
+        }
+
+        .rating-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .contact-info {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .contact-info div {
+            margin-bottom: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            min-width: 100px;
+        }
+
+        .btn-call {
+            background: #00A651;
+            color: white;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-document {
+            background: #007bff;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-rate {
+            background: #FFD700;
+            color: #333;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .comments-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .comment {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: #00A651;
+            margin-bottom: 5px;
+        }
+
+        .comment-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .view-all-btn {
+            background: #6c757d;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .loading, .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .star-input {
+            font-size: 32px;
+            cursor: pointer;
+            color: #ddd;
+        }
+
+        .star-input.active {
+            color: #FFD700;
+        }
+
+        .submit-btn {
+            background: #00A651;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .professionals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-bar input,
+            .search-bar select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">INZU</div>
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="professionals.html">Professionals</a>
+                <a href="services.html">Services</a>
+                <a href="jobs.html">Jobs Board</a>
+                <a href="index.html#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="logo">INZU</div>
+            <button class="close-btn" onclick="toggleMenu()">×</button>
+        </div>
+        <nav>
+            <a href="index.html" onclick="toggleMenu()">Home</a>
+            <a href="blogs.html" onclick="toggleMenu()">Blogs</a>
+            <a href="professionals.html" onclick="toggleMenu()">Professionals</a>
+            <a href="services.html" onclick="toggleMenu()">Services</a>
+            <a href="jobs.html" onclick="toggleMenu()">Jobs Board</a>
+            <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Find Construction Professionals</h1>
+            <p style="color: #666; margin-top: 10px;">Verified engineers and skilled workers across Rwanda</p>
+            <div class="register-btns">
+                <a href="register-engineer.html" class="register-btn">Register as Engineer</a>
+                <a href="register-worker.html" class="register-btn">Register as Worker</a>
+            </div>
+        </div>
+
+        <div class="search-filters">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by name or service...">
+                <select id="districtFilter">
+                    <option value="">All Districts</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('verified')">✅ Verified Engineers</button>
+            <button class="tab-btn" onclick="switchTab('unverified')">👷 Unverified Workers</button>
+        </div>
+
+        <div id="professionalsContainer" class="professionals-grid">
+            <div class="loading">Loading professionals...</div>
+        </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div class="modal" id="ratingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Rate & Review</h2>
+                <button class="modal-close" onclick="closeRatingModal()">×</button>
+            </div>
+            <form id="ratingForm">
+                <div class="form-group">
+                    <label>Rating</label>
+                    <div id="starRating"></div>
+                </div>
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="reviewerName" required>
+                </div>
+                <div class="form-group">
+                    <label>Your Review (Optional)</label>
+                    <textarea id="reviewComment" placeholder="Share your experience..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Submit Review</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Comments Modal -->
+    <div class="modal" id="commentsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>All Reviews</h2>
+                <button class="modal-close" onclick="closeCommentsModal()">×</button>
+            </div>
+            <div id="allCommentsContainer"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, where, orderBy, getDocs, addDoc, serverTimestamp, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8RRcGRfT3NW_u8j5Fqw0yN2EpjmNUoXg",
+            authDomain: "shyaka-87ea8.firebaseapp.com",
+            projectId: "shyaka-87ea8",
+            storageBucket: "shyaka-87ea8.firebasestorage.app",
+            messagingSenderId: "482987054954",
+            appId: "1:482987054954:web:dbbce95e72104f52d87713",
+            measurementId: "G-H3RLQ2PY6J"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const districts = [
+            "Gasabo", "Kicukiro", "Nyarugenge", "Bugesera", "Ruhango", "Huye", "Nyamagabe",
+            "Muhanga", "Gisagara", "Rwamagana", "Gicumbi", "Musanze", "Rubavu", "Nyabihu",
+            "Ngororero", "Karongi", "Rusizi", "Rutsiro", "Nyamasheke", "Kamonyi", "Nyanza",
+            "Kayonza", "Ngoma", "Kirehe", "Gakenke", "Burera", "Rulindo"
+        ];
+
+        let currentTab = 'verified';
+        let currentEngineerId = null;
+        let selectedRating = 0;
+        let allProfessionals = [];
+
+        // Populate district filter
+        const districtFilter = document.getElementById('districtFilter');
+        districts.forEach(district => {
+            const option = document.createElement('option');
+            option.value = district;
+            option.textContent = district;
+            districtFilter.appendChild(option);
+        });
+
+        // Load professionals
+        window.switchTab = async function(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            await loadProfessionals();
+        };
+
+        async function loadProfessionals() {
+            const container = document.getElementById('professionalsContainer');
+            container.innerHTML = '<div class="loading">Loading professionals...</div>';
+
+            try {
+                const collectionName = currentTab === 'verified' ? 'engineers_verified' : 'workers_public';
+                const q = query(collection(db, collectionName), orderBy('timestamp', 'desc'));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    container.innerHTML = '<div class="no-results">No professionals found in this category.</div>';
+                    allProfessionals = [];
+                    return;
+                }
+
+                allProfessionals = [];
+                container.innerHTML = '';
+
+                for (const docSnap of snapshot.docs) {
+                    const professional = docSnap.data();
+                    professional.id = docSnap.id;
+                    
+                    if (currentTab === 'verified') {
+                        professional.rating = await calculateRating(docSnap.id);
+                        professional.comments = await getComments(docSnap.id, 3);
+                    }
+                    
+                    allProfessionals.push(professional);
+                    const card = createProfessionalCard(professional);
+                    container.appendChild(card);
+                }
+
+                applyFilters();
+            } catch (error) {
+                console.error('Error loading professionals:', error);
+                container.innerHTML = '<div class="no-results">Error loading professionals.</div>';
+            }
+        }
+
+        async function calculateRating(engineerId) {
+            try {
+                const ratingsRef = collection(db, 'engineers_verified', engineerId, 'ratings');
+                const snapshot = await getDocs(ratingsRef);
+                
+                if (snapshot.empty) return { average: 0, count: 0 };
+                
+                let total = 0;
+                snapshot.forEach(doc => {
+                    total += doc.data().stars || 0;
+                });
+                
+                return {
+                    average: (total / snapshot.size).toFixed(1),
+                    count: snapshot.size
+                };
+            } catch (error) {
+                console.error('Error calculating rating:', error);
+                return { average: 0, count: 0 };
+            }
+        }
+
+        async function getComments(engineerId, limit = 3) {
+            try {
+                const commentsRef = collection(db, 'engineers_verified', engineerId, 'comments');
+                const q = query(commentsRef, orderBy('timestamp', 'desc'));
+                const snapshot = await getDocs(q);
+                
+                const comments = [];
+                let count = 0;
+                snapshot.forEach(doc => {
+                    if (count < limit) {
+                        comments.push(doc.data());
+                        count++;
+                    }
+                });
+                
+                return comments;
+            } catch (error) {
+                console.error('Error getting comments:', error);
+                return [];
+            }
+        }
+
+        function createProfessionalCard(professional) {
+            const card = document.createElement('div');
+            card.className = 'professional-card';
+            
+            const isVerified = currentTab === 'verified';
+            const stars = professional.rating ? '⭐'.repeat(Math.round(professional.rating.average)) : '';
+            
+            card.innerHTML = `
+                <span class="badge ${isVerified ? 'verified' : 'unverified'}">
+                    ${isVerified ? '✅ Verified' : '⚠️ Not Verified'}
+                </span>
+                
+                <div class="profile-header">
+                    ${professional.photoUrl ? 
+                        `<img src="${professional.photoUrl}" alt="${professional.name}" class="profile-photo">` :
+                        '<div class="profile-photo"></div>'
+                    }
+                    <div class="profile-info">
+                        <h3>${professional.name}</h3>
+                        <div class="service">${professional.service}</div>
+                        <div class="district">📍 ${professional.district}</div>
+                    </div>
+                </div>
+                
+                ${isVerified ? `
+                    <div class="rating">
+                        <span class="stars">${stars || '☆☆☆☆☆'}</span>
+                        <span class="rating-text">
+                            ${professional.rating.average > 0 ? 
+                                `${professional.rating.average} (${professional.rating.count} reviews)` : 
+                                'No reviews yet'}
+                        </span>
+                    </div>
+                ` : ''}
+                
+                <div class="contact-info">
+                    <div>📧 ${professional.email}</div>
+                    <div>📱 ${professional.phone}</div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="tel:${professional.phone}" class="btn btn-call">📞 Call</a>
+                    <a href="https://wa.me/250${professional.phone.replace(/^0/, '')}" class="btn btn-whatsapp" target="_blank">💬 WhatsApp</a>
+                </div>
+                
+                ${isVerified && professional.documentUrl ? `
+                    <button class="btn btn-document" onclick="window.open('${professional.documentUrl}', '_blank')">
+                        📄 View Document
+                    </button>
+                ` : ''}
+                
+                ${isVerified ? `
+                    <button class="btn btn-rate" onclick="openRatingModal('${professional.id}')">
+                        ⭐ Rate & Review
+                    </button>
+                    
+                    ${professional.comments && professional.comments.length > 0 ? `
+                        <div class="comments-section">
+                            <strong>Recent Reviews:</strong>
+                            ${professional.comments.map(comment => `
+                                <div class="comment">
+                                    <div class="comment-author">${comment.name}</div>
+                                    <div class="comment-text">${comment.comment}</div>
+                                </div>
+                            `).join('')}
+                            ${professional.rating.count > 3 ? `
+                                <button class="view-all-btn" onclick="viewAllComments('${professional.id}')">
+                                    View All ${professional.rating.count} Reviews
+                                </button>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+                ` : ''}
+            `;
+            
+            card.dataset.name = professional.name.toLowerCase();
+            card.dataset.service = professional.service.toLowerCase();
+            card.dataset.district = professional.district;
+            
+            return card;
+        }
+
+        // Search and filter
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('districtFilter').addEventListener('change', applyFilters);
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const selectedDistrict = document.getElementById('districtFilter').value;
+            
+            const cards = document.querySelectorAll('.professional-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const name = card.dataset.name;
+                const service = card.dataset.service;
+                const district = card.dataset.district;
+                
+                const matchesSearch = name.includes(searchTerm) || service.includes(searchTerm);
+                const matchesDistrict = !selectedDistrict || district === selectedDistrict;
+                
+                if (matchesSearch && matchesDistrict) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            if (visibleCount === 0 && cards.length > 0) {
+                document.getElementById('professionalsContainer').innerHTML += '<div class="no-results">No professionals match your search.</div>';
+            }
+        }
+
+        // Rating modal
+        window.openRatingModal = function(engineerId) {
+            currentEngineerId = engineerId;
+            selectedRating = 0;
+            document.getElementById('ratingModal').classList.add('active');
+            renderStars();
+        };
+
+        window.closeRatingModal = function() {
+            document.getElementById('ratingModal').classList.remove('active');
+            document.getElementById('ratingForm').reset();
+        };
+
+        function renderStars() {
+            const container = document.getElementById('starRating');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('span');
+                star.className = 'star-input' + (i <= selectedRating ? ' active' : '');
+                star.textContent = '★';
+                star.onclick = () => {
+                    selectedRating = i;
+                    renderStars();
+                };
+                container.appendChild(star);
+            }
+        }
+
+        document.getElementById('ratingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (selectedRating === 0) {
+                alert('Please select a rating');
+                return;
+            }
+            
+            const name = document.getElementById('reviewerName').value;
+            const comment = document.getElementById('reviewComment').value;
+            
+            try {
+                // Add rating
+                await addDoc(collection(db, 'engineers_verified', currentEngineerId, 'ratings'), {
+                    stars: selectedRating,
+                    timestamp: serverTimestamp()
+                });
+                
+                // Add comment if provided
+                if (comment.trim()) {
+                    await addDoc(collection(db, 'engineers_verified', currentEngineerId, 'comments'), {
+                        name: name,
+                        comment: comment,
+                        timestamp: serverTimestamp()
+                    });
+                }
+                
+                alert('Review submitted successfully!');
+                closeRatingModal();
+                loadProfessionals();
+            } catch (error) {
+                console.error('Error submitting review:', error);
+                alert('Error submitting review. Please try again.');
+            }
+        });
+
+        // View all comments
+        window.viewAllComments = async function(engineerId) {
+            const modal = document.getElementById('commentsModal');
+            const container = document.getElementById('allCommentsContainer');
+            
+            container.innerHTML = '<div class="loading">Loading reviews...</div>';
+            modal.classList.add('active');
+            
+            try {
+                const commentsRef = collection(db, 'engineers_verified', engineerId, 'comments');
+                const q = query(commentsRef, orderBy('timestamp', 'desc'));
+                const snapshot = await getDocs(q);
+                
+                if (snapshot.empty) {
+                    container.innerHTML = '<div class="no-results">No reviews yet.</div>';
+                    return;
+                }
+                
+                container.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const comment = doc.data();
+                    const div = document.createElement('div');
+                    div.className = 'comment';
+                    div.innerHTML = `
+                        <div class="comment-author">${comment.name}</div>
+                        <div class="comment-text">${comment.comment}</div>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                container.innerHTML = '<div class="no-results">Error loading reviews.</div>';
+            }
+        };
+
+        window.closeCommentsModal = function() {
+            document.getElementById('commentsModal').classList.remove('active');
+        };
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Initialize
+        renderStars();
+        loadProfessionals();
+    </script>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobileMenu');
+            const menuBtn = document.querySelector('.menu-btn');
+            
+            if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.mobile-menu nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobileMenu').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
