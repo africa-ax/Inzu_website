@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INZU - Building Rwanda, One Home at a Time</title>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fff;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary-color, #00A651);
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            display: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            transition: right 0.3s;
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            background: var(--primary-color, #00A651);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .mobile-menu nav {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .mobile-menu nav a {
+            display: block;
+            color: #333;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #00A651 0%, #008541 100%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero .tagline {
+            font-size: 24px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .hero .description {
+            font-size: 18px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 15px 30px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 60px 20px;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            color: var(--primary-color, #00A651);
+            margin-bottom: 50px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color, #00A651);
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        #contact .btn {
+            background: var(--button-color, #00A651);
+            color: var(--button-text-color, #ffffff);
+            border: none;
+        }
+
+        #contact .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-contact {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .footer-contact p {
+            margin: 5px 0;
+            opacity: 0.9;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0,166,81,0.2);
+            border-top-color: #00A651;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero .tagline {
+                font-size: 18px;
+            }
+
+            .hero .description {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">INZU</div>
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="professionals.html">Professionals</a>
+                <a href="services.html">Services</a>
+                <a href="jobs.html">Jobs Board</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="logo">INZU</div>
+            <button class="close-btn" onclick="toggleMenu()">×</button>
+        </div>
+        <nav>
+            <a href="index.html" onclick="toggleMenu()">Home</a>
+            <a href="blogs.html" onclick="toggleMenu()">Blogs</a>
+            <a href="professionals.html" onclick="toggleMenu()">Professionals</a>
+            <a href="services.html" onclick="toggleMenu()">Services</a>
+            <a href="jobs.html" onclick="toggleMenu()">Jobs Board</a>
+            <a href="#contact" onclick="toggleMenu()">Contact</a>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="heroSection">
+        <div class="hero-background" id="heroBackground"></div>
+        <div class="hero-content">
+            <h1 id="heroTitle">INZU</h1>
+            <p class="tagline" id="heroTagline">Building Rwanda, One Home at a Time.</p>
+            <p class="description" id="heroDescription">
+                INZU connects you with Rwanda's top construction professionals and verified engineers. 
+                Whether you're building your dream home, renovating, or need expert consultation, 
+                we provide trusted services and skilled workers to bring your vision to life.
+            </p>
+            <div class="btn-group">
+                <a href="blogs.html" class="btn">📰 Read Our Blogs</a>
+                <a href="professionals.html" class="btn">👷 Find Professionals</a>
+                <a href="services.html" class="btn">🏗️ Our Services</a>
+                <a href="jobs.html" class="btn">💼 Available Jobs</a>
+                <a href="#contact" class="btn btn-outline">📞 Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose INZU?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h3>Verified Professionals</h3>
+                    <p>All engineers are verified with credentials and documents to ensure quality and trust.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏗️</div>
+                    <h3>Wide Range of Services</h3>
+                    <p>From architecture to construction, find all building services in one platform.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Rating System</h3>
+                    <p>Read reviews and ratings from real clients to make informed decisions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <h3>District Coverage</h3>
+                    <p>Find professionals in all districts across Rwanda for your convenience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="features">
+        <div class="container">
+            <h2 class="section-title">Get in Touch</h2>
+            <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <p style="font-size: 18px; margin-bottom: 30px; color: #666;">
+                    Have questions? Need assistance? Contact INZU today!
+                </p>
+                <div class="btn-group" id="contactButtons">
+                    <a href="tel:0792425137" class="btn">📞 Call Now</a>
+                    <a href="https://wa.me/250792425137" class="btn" target="_blank">💬 WhatsApp</a>
+                    <a href="mailto:support@inzu.rw" class="btn">📧 Email Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="professionals.html">Professionals</a>
+                <a href="services.html">Services</a>
+                <a href="jobs.html">Jobs Board</a>
+            </div>
+            <div class="footer-contact" id="footerContact">
+                <p>📞 Phone: <span id="footerPhone">+250 792 425 137</span></p>
+                <p>📧 Email: <span id="footerEmail">support@inzu.rw</span></p>
+                <p>📍 Address: <span id="footerAddress">Kigali, Rwanda</span></p>
+            </div>
+            <p style="margin-top: 20px; opacity: 0.8;">© 2024 INZU - Building Rwanda, One Home at a Time.</p>
+        </div>
+    </footer>
+
+    <script>
+        let firebaseInitialized = false;
+
+        // Wait for Firebase to load
+        window.addEventListener('load', function() {
+            let attempts = 0;
+            const maxAttempts = 50;
+            
+            const checkFirebase = setInterval(function() {
+                attempts++;
+                
+                if (typeof firebase !== 'undefined') {
+                    clearInterval(checkFirebase);
+                    initializeFirebase();
+                } else if (attempts >= maxAttempts) {
+                    console.error('Firebase failed to load');
+                    clearInterval(checkFirebase);
+                }
+            }, 100);
+        });
+
+        function initializeFirebase() {
+            if (firebaseInitialized) return;
+            
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyA8RRcGRfT3NW_u8j5Fqw0yN2EpjmNUoXg",
+                    authDomain: "shyaka-87ea8.firebaseapp.com",
+                    projectId: "shyaka-87ea8",
+                    storageBucket: "shyaka-87ea8.firebasestorage.app",
+                    messagingSenderId: "482987054954",
+                    appId: "1:482987054954:web:dbbce95e72104f52d87713",
+                    measurementId: "G-H3RLQ2PY6J"
+                };
+
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                firebaseInitialized = true;
+                loadWebsiteSettings();
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+            }
+        }
+
+        async function loadWebsiteSettings() {
+            try {
+                const db = firebase.firestore();
+                const doc = await db.collection('website_settings').doc('config').get();
+                
+                if (doc.exists) {
+                    const settings = doc.data();
+                    
+                    // Update Hero Section
+                    if (settings.heroTitle) {
+                        document.getElementById('heroTitle').textContent = settings.heroTitle;
+                    }
+                    
+                    if (settings.heroSubtitle) {
+                        document.getElementById('heroTagline').textContent = settings.heroSubtitle;
+                    }
+                    
+                    if (settings.heroImage) {
+                        document.getElementById('heroBackground').style.backgroundImage = `url(${settings.heroImage})`;
+                    }
+                    
+                    // Update Colors
+                    if (settings.primaryColor) {
+                        document.documentElement.style.setProperty('--primary-color', settings.primaryColor);
+                    }
+                    
+                    if (settings.buttonColor) {
+                        document.documentElement.style.setProperty('--button-color', settings.buttonColor);
+                    }
+                    
+                    if (settings.buttonTextColor) {
+                        document.documentElement.style.setProperty('--button-text-color', settings.buttonTextColor);
+                    }
+                    
+                    // Update Contact Info
+                    if (settings.contactPhone) {
+                        document.getElementById('footerPhone').textContent = settings.contactPhone;
+                        const phoneBtn = document.querySelector('a[href^="tel:"]');
+                        if (phoneBtn) phoneBtn.href = `tel:${settings.contactPhone.replace(/\s/g, '')}`;
+                    }
+                    
+                    if (settings.contactEmail) {
+                        document.getElementById('footerEmail').textContent = settings.contactEmail;
+                        const emailBtn = document.querySelector('a[href^="mailto:"]');
+                        if (emailBtn) emailBtn.href = `mailto:${settings.contactEmail}`;
+                    }
+                    
+                    if (settings.contactAddress) {
+                        document.getElementById('footerAddress').textContent = settings.contactAddress;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading website settings:', error);
+            }
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobileMenu');
+            const menuBtn = document.querySelector('.menu-btn');
+            
+            if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
