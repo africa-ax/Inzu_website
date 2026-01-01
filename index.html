@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INZU — Rwanda's Premier Construction & Engineering Platform</title>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <style>
+        :root {
+            --primary-color: #006837;
+            --primary-dark: #004d29;
+            --secondary-color: #1a1a1a;
+            --text-main: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --accent-border: #e2e8f0;
+            --button-color: #006837;
+            --button-text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--white);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--white);
+            color: var(--secondary-color);
+            padding: 0;
+            height: 80px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--primary-color);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            font-size: 28px;
+            cursor: pointer;
+            display: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Fixed Mobile Menu Logic */
+        .mobile-menu {
+            display: block; /* Always block, controlled by transform */
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            transform: translateX(100%); /* Start off-screen to the right */
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0); /* Slide into view */
+        }
+
+        .mobile-menu-header {
+            background: var(--bg-light);
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent-border);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        .mobile-menu nav {
+            display: flex;
+            flex-direction: column;
+            padding: 16px 0;
+            gap: 0;
+        }
+
+        .mobile-menu nav a {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--bg-light);
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            color: var(--white);
+            padding: 120px 24px;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a1a;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+            z-index: 1;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+
+        .hero .tagline {
+            font-size: 20px;
+            margin-bottom: 24px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4ade80;
+        }
+
+        .hero .description {
+            font-size: 20px;
+            margin-bottom: 48px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hero .btn {
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+        }
+
+        .hero .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .hero .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+
+        .hero .btn-outline:hover {
+            border-color: var(--white);
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 24px;
+            background: var(--bg-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--secondary-color);
+            margin-bottom: 64px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 16px auto 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 48px 32px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-top-color: var(--primary-color);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 16px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* Contact Section */
+        #contact {
+            background: var(--white);
+            padding-bottom: 100px;
+        }
+
+        #contact .btn {
+            background: var(--button-color);
+            color: var(--button-text-color);
+            border: none;
+            min-width: 180px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-color);
+            color: rgba(255,255,255,0.7);
+            padding: 80px 24px 40px;
+            text-align: left;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 60px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 40px;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-contact {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            margin-top: 20px;
+        }
+
+        .footer-contact p {
+            margin: 8px 0;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-contact span {
+            color: var(--white);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            header { height: 70px; }
+            nav { display: none; }
+            .menu-btn { display: block; }
+            .hero { padding: 80px 20px; }
+            .hero h1 { font-size: 38px; }
+            .hero .description { font-size: 16px; }
+            .btn { width: 100%; }
+            .section-title { font-size: 28px; }
+            .feature-card { padding: 32px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">INZU</div>
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="blogs.html">Market Insights</a>
+                <a href="professionals.html">Certified Professionals</a>
+                <a href="services.html">Services</a>
+                <a href="jobs.html">Opportunities</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="logo">INZU</div>
+            <button class="close-btn" onclick="toggleMenu()">×</button>
+        </div>
+        <nav>
+            <a href="index.html" onclick="toggleMenu()">Home</a>
+            <a href="blogs.html" onclick="toggleMenu()">Market Insights</a>
+            <a href="professionals.html" onclick="toggleMenu()">Certified Professionals</a>
+            <a href="services.html" onclick="toggleMenu()">Services</a>
+            <a href="jobs.html" onclick="toggleMenu()">Opportunities</a>
+            <a href="#contact" onclick="toggleMenu()">Contact</a>
+        </nav>
+    </div>
+
+    <section class="hero" id="heroSection">
+        <div class="hero-background" id="heroBackground"></div>
+        <div class="hero-content">
+            <h1 id="heroTitle">Advancing Rwanda's Built Environment</h1>
+            <p class="tagline" id="heroTagline">Professionalism. Integrity. Excellence.</p>
+            <p class="description" id="heroDescription">
+                INZU is Rwanda's centralized platform connecting property developers with certified engineering professionals and high-standard construction services.
+            </p>
+            <div class="btn-group">
+                <a href="blogs.html" class="btn">Technical Insights</a>
+                <a href="professionals.html" class="btn">Find Engineers</a>
+                <a href="services.html" class="btn">Project Services</a>
+                <a href="jobs.html" class="btn">Active Tenders</a>
+                <a href="#contact" class="btn btn-outline">Consultation</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">The INZU Advantage</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🛡️</span>
+                    <h3>Verified Standards</h3>
+                    <p>All engineers and firms undergo a rigorous vetting process, ensuring licenses are valid within Rwanda.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📐</span>
+                    <h3>Comprehensive Solutions</h3>
+                    <p>Access a full spectrum of engineering disciplines, from structural design to site surveys.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3>Performance Metrics</h3>
+                    <p>Make data-driven hiring decisions based on verified client feedback and project portfolios.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🇷🇼</span>
+                    <h3>National Reach</h3>
+                    <p>Localized expertise tailored to Rwanda's specific geographical requirements across all districts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="features">
+        <div class="container">
+            <h2 class="section-title">Professional Support</h2>
+            <div style="text-align: center; max-width: 700px; margin: 0 auto;">
+                <p style="font-size: 18px; margin-bottom: 40px; color: var(--text-light);">
+                    Our team is available to assist with professional inquiries and technical support.
+                </p>
+                <div class="btn-group" id="contactButtons">
+                    <a href="tel:0792425137" class="btn">Direct Line</a>
+                    <a href="https://wa.me/250792425137" class="btn" target="_blank">WhatsApp Business</a>
+                    <a href="mailto:support@inzu.rw" class="btn">Official Email</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="blogs.html">Market Insights</a>
+                <a href="professionals.html">Professional Directory</a>
+                <a href="services.html">Services Portfolio</a>
+                <a href="jobs.html">Career Board</a>
+            </div>
+            <div class="footer-contact" id="footerContact">
+                <p>Telephone <span id="footerPhone">+250 792 425 137</span></p>
+                <p>Support <span id="footerEmail">support@inzu.rw</span></p>
+                <p>Headquarters <span id="footerAddress">Kigali, Rwanda</span></p>
+            </div>
+            <p style="margin-top: 60px; font-size: 13px; opacity: 0.6; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                &copy; 2024 INZU Platform. Committed to excellence in Rwanda's construction industry.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        let firebaseInitialized = false;
+
+        window.addEventListener('load', function() {
+            let attempts = 0;
+            const maxAttempts = 50;
+            
+            const checkFirebase = setInterval(function() {
+                attempts++;
+                if (typeof firebase !== 'undefined') {
+                    clearInterval(checkFirebase);
+                    initializeFirebase();
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(checkFirebase);
+                }
+            }, 100);
+        });
+
+        function initializeFirebase() {
+            if (firebaseInitialized) return;
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyA8RRcGRfT3NW_u8j5Fqw0yN2EpjmNUoXg",
+                    authDomain: "shyaka-87ea8.firebaseapp.com",
+                    projectId: "shyaka-87ea8",
+                    storageBucket: "shyaka-87ea8.firebasestorage.app",
+                    messagingSenderId: "482987054954",
+                    appId: "1:482987054954:web:dbbce95e72104f52d87713",
+                    measurementId: "G-H3RLQ2PY6J"
+                };
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                firebaseInitialized = true;
+                loadWebsiteSettings();
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+            }
+        }
+
+        async function loadWebsiteSettings() {
+            try {
+                const db = firebase.firestore();
+                const doc = await db.collection('website_settings').doc('config').get();
+                if (doc.exists) {
+                    const settings = doc.data();
+                    if (settings.heroTitle) document.getElementById('heroTitle').textContent = settings.heroTitle;
+                    if (settings.heroSubtitle) document.getElementById('heroTagline').textContent = settings.heroSubtitle;
+                    if (settings.heroImage) document.getElementById('heroBackground').style.backgroundImage = `url(${settings.heroImage})`;
+                    if (settings.primaryColor) document.documentElement.style.setProperty('--primary-color', settings.primaryColor);
+                    if (settings.buttonColor) document.documentElement.style.setProperty('--button-color', settings.buttonColor);
+                    if (settings.buttonTextColor) document.documentElement.style.setProperty('--button-text-color', settings.buttonTextColor);
+                    if (settings.contactPhone) {
+                        document.getElementById('footerPhone').textContent = settings.contactPhone;
+                        const phoneBtn = document.querySelector('a[href^="tel:"]');
+                        if (phoneBtn) phoneBtn.href = `tel:${settings.contactPhone.replace(/\s/g, '')}`;
+                    }
+                    if (settings.contactEmail) {
+                        document.getElementById('footerEmail').textContent = settings.contactEmail;
+                        const emailBtn = document.querySelector('a[href^="mailto:"]');
+                        if (emailBtn) emailBtn.href = `mailto:${settings.contactEmail}`;
+                    }
+                    if (settings.contactAddress) document.getElementById('footerAddress').textContent = settings.contactAddress;
+                }
+            } catch (error) {}
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Improved close logic
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobileMenu');
+            const menuBtn = document.querySelector('.menu-btn');
+            if (menu.classList.contains('active')) {
+                if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                    menu.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
