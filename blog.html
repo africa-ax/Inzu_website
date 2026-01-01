@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INZU — Industry Insights</title>
+    <style>
+        :root {
+            --primary-color: #006837;
+            --primary-dark: #004d29;
+            --secondary-color: #1a1a1a;
+            --text-main: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --accent-border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--white);
+            color: var(--secondary-color);
+            height: 80px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--primary-color);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            font-size: 28px;
+            cursor: pointer;
+            display: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: block;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            background: var(--bg-light);
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent-border);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        .mobile-menu nav {
+            display: flex;
+            flex-direction: column;
+            padding: 16px 0;
+            gap: 0;
+        }
+
+        .mobile-menu nav a {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--bg-light);
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        /* Container & Article Layout */
+        .container {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: var(--primary-color);
+            padding: 0;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 40px;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+        }
+
+        .article {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 60px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .article-title {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--secondary-color);
+            margin-bottom: 24px;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 24px;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--accent-border);
+            padding-bottom: 20px;
+        }
+
+        .article-image {
+            width: 100%;
+            height: auto;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 40px;
+        }
+
+        .article-content {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-main);
+            white-space: pre-wrap;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 100px 24px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header { height: 70px; }
+            nav { display: none; }
+            .menu-btn { display: block; }
+            .container { padding: 40px 20px; }
+            .article { padding: 32px 24px; }
+            .article-title { font-size: 28px; }
+            .article-content { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">INZU</div>
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="blogs.html">Market Insights</a>
+                <a href="professionals.html">Certified Professionals</a>
+                <a href="services.html">Services</a>
+                <a href="jobs.html">Opportunities</a>
+                <a href="index.html#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="logo">INZU</div>
+            <button class="close-btn" onclick="toggleMenu()">×</button>
+        </div>
+        <nav>
+            <a href="index.html" onclick="toggleMenu()">Home</a>
+            <a href="blogs.html" onclick="toggleMenu()">Market Insights</a>
+            <a href="professionals.html" onclick="toggleMenu()">Certified Professionals</a>
+            <a href="services.html" onclick="toggleMenu()">Services</a>
+            <a href="jobs.html" onclick="toggleMenu()">Opportunities</a>
+            <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <button class="back-btn" onclick="window.location.href='blogs.html'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back to Insights
+        </button>
+        
+        <div id="articleContainer">
+            <div class="loading">Retrieving technical data...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8RRcGRfT3NW_u8j5Fqw0yN2EpjmNUoXg",
+            authDomain: "shyaka-87ea8.firebaseapp.com",
+            projectId: "shyaka-87ea8",
+            storageBucket: "shyaka-87ea8.firebasestorage.app",
+            messagingSenderId: "482987054954",
+            appId: "1:482987054954:web:dbbce95e72104f52d87713",
+            measurementId: "G-H3RLQ2PY6J"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadArticle() {
+            const container = document.getElementById('articleContainer');
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+
+            if (!postId) {
+                container.innerHTML = '<div class="loading">Documentation not found.</div>';
+                return;
+            }
+
+            try {
+                const docRef = doc(db, 'posts', postId);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    container.innerHTML = '<div class="loading">Documentation not found.</div>';
+                    return;
+                }
+
+                const blog = docSnap.data();
+                const date = blog.timestamp ? new Date(blog.timestamp.seconds * 1000).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                }) : 'Published Recently';
+
+                container.innerHTML = `
+                    <article class="article">
+                        <h1 class="article-title">${blog.title}</h1>
+                        <div class="article-meta">
+                            <span>Published: ${date}</span>
+                            <span>By: ${blog.author || 'INZU Technical Team'}</span>
+                        </div>
+                        ${blog.imageUrl ? `<img src="${blog.imageUrl}" alt="${blog.title}" class="article-image">` : ''}
+                        <div class="article-content">${blog.content}</div>
+                    </article>
+                `;
+
+                document.title = `${blog.title} — INZU Insights`;
+            } catch (error) {
+                console.error('Error loading article:', error);
+                container.innerHTML = '<div class="loading">A system error occurred. Please refresh the page.</div>';
+            }
+        }
+
+        loadArticle();
+    </script>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobileMenu');
+            const menuBtn = document.querySelector('.menu-btn');
+            if (menu.classList.contains('active')) {
+                if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                    menu.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
