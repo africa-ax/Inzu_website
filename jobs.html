@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INZU — Procurement & Jobs Board</title>
+    <style>
+        :root {
+            --primary-color: #006837;
+            --primary-dark: #004d29;
+            --secondary-color: #1a1a1a;
+            --text-main: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --accent-border: #e2e8f0;
+            --button-color: #006837;
+            --button-text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--white);
+            color: var(--secondary-color);
+            height: 80px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--primary-color);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            font-size: 28px;
+            cursor: pointer;
+            display: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Fixed Mobile Menu Logic */
+        .mobile-menu {
+            display: block;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            background: var(--bg-light);
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent-border);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        .mobile-menu nav {
+            display: flex;
+            flex-direction: column;
+            padding: 16px 0;
+        }
+
+        .mobile-menu nav a {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--bg-light);
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        /* Hero Section */
+        .hero-jobs {
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 80px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-jobs h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .hero-jobs p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Form Styling */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        .section {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 48px;
+            margin-bottom: 48px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--secondary-color);
+            margin-bottom: 32px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--accent-border);
+            border-radius: 4px;
+            font-size: 15px;
+            transition: border-color 0.2s;
+            background: var(--bg-light);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: var(--white);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 24px;
+            background: var(--bg-light);
+            border: 2px dashed var(--accent-border);
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .file-input-label:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Message Styling */
+        .message {
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            display: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .message.success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .message.error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* Available Jobs Grid */
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+
+        .job-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        .job-type {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--secondary-color);
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .job-budget {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .job-description {
+            color: var(--text-main);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        .job-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 24px;
+        }
+
+        .job-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .job-btn {
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn-call {
+            background: var(--bg-light);
+            color: var(--secondary-color);
+            border: 1px solid var(--accent-border);
+        }
+
+        .btn-call:hover {
+            background: var(--white);
+            border-color: var(--secondary-color);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: #128c7e;
+        }
+
+        @media (max-width: 768px) {
+            header { height: 70px; }
+            nav { display: none; }
+            .menu-btn { display: block; }
+            .hero-jobs h1 { font-size: 32px; }
+            .section { padding: 32px 24px; }
+            .jobs-grid { grid-template-columns: 1fr; }
+            .job-actions { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">INZU</div>
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="blogs.html">Market Insights</a>
+                <a href="professionals.html">Certified Professionals</a>
+                <a href="services.html">Services</a>
+                <a href="jobs.html">Opportunities</a>
+                <a href="index.html#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="logo">INZU</div>
+            <button class="close-btn" onclick="toggleMenu()">×</button>
+        </div>
+        <nav>
+            <a href="index.html" onclick="toggleMenu()">Home</a>
+            <a href="blogs.html" onclick="toggleMenu()">Market Insights</a>
+            <a href="professionals.html" onclick="toggleMenu()">Certified Professionals</a>
+            <a href="services.html" onclick="toggleMenu()">Services</a>
+            <a href="jobs.html" onclick="toggleMenu()">Opportunities</a>
+            <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+        </nav>
+    </div>
+
+    <div class="hero-jobs">
+        <h1>Procurement & Jobs</h1>
+        <p>Post active requirements or bid for open construction projects across Rwanda.</p>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2 class="section-title">Submit a Request</h2>
+            
+            <div id="formMessage" class="message"></div>
+
+            <form id="jobForm">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                    <div class="form-group">
+                        <label>Contact Name <span class="required">*</span></label>
+                        <input type="text" id="clientName" required placeholder="Full Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="clientPhone" required placeholder="07XX XXX XXX">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                    <div class="form-group">
+                        <label>District <span class="required">*</span></label>
+                        <select id="district" required>
+                            <option value="">Select district</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Requirement Type <span class="required">*</span></label>
+                        <select id="jobType" required>
+                            <option value="">Select specialized trade</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Budget Allocation <span class="required">*</span></label>
+                    <input type="text" id="budget" required placeholder="e.g., 500,000 RWF">
+                </div>
+
+                <div class="form-group">
+                    <label>Technical Specifications <span class="required">*</span></label>
+                    <textarea id="description" required placeholder="Detail the scope of work and specific requirements..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Documentation / Reference Image (Max 1MB)</label>
+                    <div class="file-input-wrapper" style="width: 100%;">
+                        <input type="file" id="jobImage" accept="image/*" style="display: none;">
+                        <label for="jobImage" class="file-input-label">
+                            Click to upload site photos or specifications
+                        </label>
+                    </div>
+                    <div id="imageFileName" style="font-size: 13px; margin-top: 8px; color: var(--text-light);"></div>
+                    <div id="fileSizeWarning" style="color: #ef4444; font-size: 12px; margin-top: 4px;"></div>
+                    <img id="imagePreview" style="max-width: 200px; border-radius: 4px; margin-top: 16px; display: none;" alt="Preview">
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">Publish Requirement</button>
+            </form>
+        </div>
+
+        <div class="section" style="background: transparent; box-shadow: none; padding: 0;">
+            <h2 class="section-title">Open Tenders & Requests</h2>
+            <div id="jobsContainer" class="jobs-grid">
+                <div class="loading" style="grid-column: 1/-1; text-align: center; padding: 60px;">Synchronizing tender database...</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, query, orderBy, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8RRcGRfT3NW_u8j5Fqw0yN2EpjmNUoXg",
+            authDomain: "shyaka-87ea8.firebaseapp.com",
+            projectId: "shyaka-87ea8",
+            storageBucket: "shyaka-87ea8.firebasestorage.app",
+            messagingSenderId: "482987054954",
+            appId: "1:482987054954:web:dbbce95e72104f52d87713"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Populate districts
+        const districts = ["Gasabo", "Kicukiro", "Nyarugenge", "Bugesera", "Ruhango", "Huye", "Nyamagabe", "Muhanga", "Gisagara", "Rwamagana", "Gicumbi", "Musanze", "Rubavu", "Nyabihu", "Ngororero", "Karongi", "Rusizi", "Rutsiro", "Nyamasheke", "Kamonyi", "Nyanza", "Kayonza", "Ngoma", "Kirehe", "Gakenke", "Burera", "Rulindo"];
+        const districtSelect = document.getElementById('district');
+        districts.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d; opt.textContent = d;
+            districtSelect.appendChild(opt);
+        });
+
+        // Populate job types
+        const jobTypes = ["Cost Estimator", "House Planner", "Draftsman", "Mason", "Carpenter", "Painter", "Tiler", "Roofer", "Welder", "Steel Fixer", "Driver (Equipment)", "Electrician", "Domestic Plumber", "Solar Technician", "CCTV Installer", "Alarm Technician", "Interior Designer", "Landscaper", "Cleaning Services", "Water Tank Installer", "AC Technician", "General Technician"];
+        const jobTypeSelect = document.getElementById('jobType');
+        jobTypes.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t; opt.textContent = t;
+            jobTypeSelect.appendChild(opt);
+        });
+
+        document.getElementById('jobImage').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const warning = document.getElementById('fileSizeWarning');
+            if (file && file.size > 1024 * 1024) {
+                warning.textContent = 'Documentation must be under 1MB.';
+                e.target.value = '';
+                document.getElementById('imagePreview').style.display = 'none';
+            } else if (file) {
+                warning.textContent = '';
+                document.getElementById('imageFileName').textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('jobForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.textContent = 'Processing...';
+
+            try {
+                const imageFile = document.getElementById('jobImage').files[0];
+                let imageBase64 = null;
+                if (imageFile) {
+                    imageBase64 = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.readAsDataURL(imageFile);
+                    });
+                }
+
+                await addDoc(collection(db, 'jobs'), {
+                    clientName: document.getElementById('clientName').value,
+                    clientPhone: document.getElementById('clientPhone').value,
+                    district: document.getElementById('district').value,
+                    jobType: document.getElementById('jobType').value,
+                    budget: document.getElementById('budget').value,
+                    description: document.getElementById('description').value,
+                    imageBase64: imageBase64,
+                    timestamp: serverTimestamp()
+                });
+
+                document.getElementById('formMessage').textContent = 'Project published successfully.';
+                document.getElementById('formMessage').className = 'message success';
+                document.getElementById('formMessage').style.display = 'block';
+                document.getElementById('jobForm').reset();
+                document.getElementById('imagePreview').style.display = 'none';
+                loadJobs();
+            } catch (err) {
+                document.getElementById('formMessage').textContent = 'Submission error. Please try again.';
+                document.getElementById('formMessage').className = 'message error';
+                document.getElementById('formMessage').style.display = 'block';
+            } finally {
+                btn.disabled = false; btn.textContent = 'Publish Requirement';
+            }
+        });
+
+        async function loadJobs() {
+            const container = document.getElementById('jobsContainer');
+            try {
+                const q = query(collection(db, 'jobs'), orderBy('timestamp', 'desc'));
+                const snap = await getDocs(q);
+                if (snap.empty) {
+                    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 40px;">No open tenders found.</div>';
+                    return;
+                }
+                container.innerHTML = '';
+                snap.forEach(doc => {
+                    const job = doc.data();
+                    const date = job.timestamp ? new Date(job.timestamp.seconds * 1000).toLocaleDateString() : 'Active';
+                    const card = document.createElement('div');
+                    card.className = 'job-card';
+                    card.innerHTML = `
+                        <div class="job-type">${job.jobType}</div>
+                        <div class="job-meta"><span>📍 ${job.district}</span><span>📅 ${date}</span></div>
+                        <div class="job-budget">RWF ${job.budget}</div>
+                        ${job.imageBase64 ? `<img src="${job.imageBase64}" class="job-image" alt="Job">` : ''}
+                        <div class="job-description">${job.description}</div>
+                        <div style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">Client: <strong>${job.clientName}</strong></div>
+                        <div class="job-actions">
+                            <a href="tel:${job.clientPhone}" class="job-btn btn-call">Voice Call</a>
+                            <a href="https://wa.me/${job.clientPhone.replace(/^0/, '250')}" class="job-btn btn-whatsapp" target="_blank">WhatsApp</a>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (e) {
+                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 40px;">Synchronization error.</div>';
+            }
+        }
+        loadJobs();
+    </script>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('mobileMenu');
+            const btn = document.querySelector('.menu-btn');
+            if (menu.classList.contains('active') && !menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
