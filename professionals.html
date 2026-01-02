@@ -1,0 +1,692 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INZU — Professional Directory & Engineering Verification</title>
+    <style>
+        :root {
+            --primary-color: #006837;
+            --primary-dark: #004d29;
+            --secondary-color: #1a1a1a;
+            --text-main: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --accent-border: #e2e8f0;
+            --verified-blue: #007bff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--white);
+            color: var(--secondary-color);
+            height: 80px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--primary-color);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            font-size: 28px;
+            cursor: pointer;
+            display: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: block;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100vh;
+            background: var(--white);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            background: var(--bg-light);
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent-border);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        .mobile-menu nav {
+            display: flex;
+            flex-direction: column;
+            padding: 16px 0;
+        }
+
+        .mobile-menu nav a {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--bg-light);
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        /* Content Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        .page-header {
+            text-align: left;
+            margin-bottom: 48px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 24px;
+        }
+
+        .page-title {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--secondary-color);
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+
+        .register-btns {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .register-btn {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 14px 28px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .register-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Search & Filters */
+        .search-filters {
+            background: var(--white);
+            padding: 32px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .search-bar {
+            display: grid;
+            grid-template-columns: 1fr 240px;
+            gap: 16px;
+        }
+
+        .search-bar input,
+        .search-bar select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--accent-border);
+            border-radius: 4px;
+            font-size: 15px;
+            background: var(--bg-light);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 32px;
+            border-bottom: 1px solid var(--accent-border);
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 16px 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--text-light);
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* Professionals Grid */
+        .professionals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+
+        .professional-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .professional-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: var(--accent-border);
+        }
+
+        .badge {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.verified {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge.unverified {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .profile-photo {
+            width: 72px;
+            height: 72px;
+            border-radius: 4px;
+            object-fit: cover;
+            background: var(--bg-light);
+            border: 1px solid var(--accent-border);
+        }
+
+        .profile-info h3 {
+            color: var(--secondary-color);
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .profile-info .service {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+
+        .profile-info .district {
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 8px 0;
+            border-top: 1px solid var(--bg-light);
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .stars {
+            color: #f59e0b;
+            font-size: 16px;
+        }
+
+        .rating-text {
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .contact-info {
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        .contact-info div {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .btn-call {
+            background: var(--bg-light);
+            color: var(--secondary-color);
+            border: 1px solid var(--accent-border);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            border: none;
+        }
+
+        .btn-document {
+            background: var(--white);
+            color: var(--verified-blue);
+            border: 1px solid var(--verified-blue);
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .btn-rate {
+            background: var(--secondary-color);
+            color: white;
+            width: 100%;
+            margin-top: 12px;
+            border: none;
+        }
+
+        /* Modal Redesign */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        @media (max-width: 768px) {
+            header { height: 70px; }
+            nav { display: none; }
+            .menu-btn { display: block; }
+            .search-bar { grid-template-columns: 1fr; }
+            .page-title { font-size: 32px; }
+            .professionals-grid { grid-template-columns: 1fr; }
+            .action-buttons { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">INZU</div>
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="blogs.html">Market Insights</a>
+                <a href="professionals.html">Certified Professionals</a>
+                <a href="services.html">Services</a>
+                <a href="jobs.html">Opportunities</a>
+                <a href="index.html#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="logo">INZU</div>
+            <button class="close-btn" onclick="toggleMenu()">×</button>
+        </div>
+        <nav>
+            <a href="index.html" onclick="toggleMenu()">Home</a>
+            <a href="blogs.html" onclick="toggleMenu()">Market Insights</a>
+            <a href="professionals.html" onclick="toggleMenu()">Certified Professionals</a>
+            <a href="services.html" onclick="toggleMenu()">Services</a>
+            <a href="jobs.html" onclick="toggleMenu()">Opportunities</a>
+            <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Technical Directory</h1>
+            <p style="color: var(--text-light); font-size: 18px;">Access a centralized database of verified engineers and construction specialists in Rwanda.</p>
+            <div class="register-btns">
+                <a href="register-engineer.html" class="register-btn">Accredit as Engineer</a>
+                <a href="register-worker.html" class="register-btn" style="background: var(--secondary-color);">Register Specialist</a>
+            </div>
+        </div>
+
+        <div class="search-filters">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search by name, expertise, or firm...">
+                <select id="districtFilter">
+                    <option value="">All Districts (Rwanda)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('verified')">Certified Engineers</button>
+            <button class="tab-btn" onclick="switchTab('unverified')">Specialized Trades</button>
+        </div>
+
+        <div id="professionalsContainer" class="professionals-grid">
+            <div class="loading" style="grid-column: 1/-1; text-align: center; padding: 60px;">Synchronizing professional records...</div>
+        </div>
+    </div>
+
+    <div class="modal" id="ratingModal">
+        <div class="modal-content">
+            <div class="modal-header" style="display: flex; justify-content: space-between; margin-bottom: 32px;">
+                <h2>Professional Evaluation</h2>
+                <button class="modal-close" onclick="closeRatingModal()" style="border:none; background:none; font-size:24px; cursor:pointer;">&times;</button>
+            </div>
+            <form id="ratingForm">
+                <div style="margin-bottom: 24px;">
+                    <label style="display:block; font-weight:700; font-size:12px; text-transform:uppercase; margin-bottom:8px;">Performance Rating</label>
+                    <div id="starRating"></div>
+                </div>
+                <div style="margin-bottom: 24px;">
+                    <label style="display:block; font-weight:700; font-size:12px; text-transform:uppercase; margin-bottom:8px;">Client/Firm Name</label>
+                    <input type="text" id="reviewerName" required style="width:100%; padding:12px; border:1px solid var(--accent-border); border-radius:4px;">
+                </div>
+                <div style="margin-bottom: 24px;">
+                    <label style="display:block; font-weight:700; font-size:12px; text-transform:uppercase; margin-bottom:8px;">Technical Feedback</label>
+                    <textarea id="reviewComment" style="width:100%; padding:12px; border:1px solid var(--accent-border); border-radius:4px; min-height:100px;"></textarea>
+                </div>
+                <button type="submit" class="submit-btn" style="width:100%; background:var(--primary-color); color:white; border:none; padding:16px; font-weight:700; border-radius:4px; cursor:pointer;">SUBMIT REVIEW</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="commentsModal">
+        <div class="modal-content">
+            <div class="modal-header" style="display: flex; justify-content: space-between; margin-bottom: 32px;">
+                <h2>Performance History</h2>
+                <button class="modal-close" onclick="closeCommentsModal()" style="border:none; background:none; font-size:24px; cursor:pointer;">&times;</button>
+            </div>
+            <div id="allCommentsContainer"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, where, orderBy, getDocs, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8RRcGRfT3NW_u8j5Fqw0yN2EpjmNUoXg",
+            authDomain: "shyaka-87ea8.firebaseapp.com",
+            projectId: "shyaka-87ea8",
+            storageBucket: "shyaka-87ea8.firebasestorage.app",
+            messagingSenderId: "482987054954",
+            appId: "1:482987054954:web:dbbce95e72104f52d87713"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const districts = ["Gasabo", "Kicukiro", "Nyarugenge", "Bugesera", "Ruhango", "Huye", "Nyamagabe", "Muhanga", "Gisagara", "Rwamagana", "Gicumbi", "Musanze", "Rubavu", "Nyabihu", "Ngororero", "Karongi", "Rusizi", "Rutsiro", "Nyamasheke", "Kamonyi", "Nyanza", "Kayonza", "Ngoma", "Kirehe", "Gakenke", "Burera", "Rulindo"];
+
+        const districtFilter = document.getElementById('districtFilter');
+        districts.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d; opt.textContent = d;
+            districtFilter.appendChild(opt);
+        });
+
+        let currentTab = 'verified';
+        let currentEngineerId = null;
+        let selectedRating = 0;
+
+        window.switchTab = async function(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            await loadProfessionals();
+        };
+
+        async function loadProfessionals() {
+            const container = document.getElementById('professionalsContainer');
+            container.innerHTML = '<div class="loading" style="grid-column: 1/-1; text-align: center; padding: 60px;">Loading professional database...</div>';
+            try {
+                const collectionName = currentTab === 'verified' ? 'engineers_verified' : 'workers_public';
+                const q = query(collection(db, collectionName), orderBy('timestamp', 'desc'));
+                const snap = await getDocs(q);
+                if (snap.empty) { container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No records found in this category.</div>'; return; }
+                container.innerHTML = '';
+                for (const docSnap of snap.docs) {
+                    const prof = docSnap.data();
+                    const id = docSnap.id;
+                    const rating = currentTab === 'verified' ? await calculateRating(id) : null;
+                    const comments = currentTab === 'verified' ? await getComments(id, 2) : null;
+                    container.appendChild(createProfessionalCard({...prof, id, rating, comments}));
+                }
+            } catch (err) { container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-light);">Connection error.</div>'; }
+        }
+
+        async function calculateRating(id) {
+            const snap = await getDocs(collection(db, 'engineers_verified', id, 'ratings'));
+            if (snap.empty) return { average: 0, count: 0 };
+            let total = 0; snap.forEach(d => total += d.data().stars);
+            return { average: (total / snap.size).toFixed(1), count: snap.size };
+        }
+
+        async function getComments(id, limit = 2) {
+            const q = query(collection(db, 'engineers_verified', id, 'comments'), orderBy('timestamp', 'desc'));
+            const snap = await getDocs(q);
+            const comments = []; snap.forEach(d => comments.push(d.data()));
+            return comments.slice(0, limit);
+        }
+
+        function createProfessionalCard(p) {
+            const card = document.createElement('div');
+            card.className = 'professional-card';
+            const isVerified = currentTab === 'verified';
+            card.innerHTML = `
+                <span class="badge ${isVerified ? 'verified' : 'unverified'}">${isVerified ? 'Certified' : 'Registered'}</span>
+                <div class="profile-header">
+                    <img src="${p.photoUrl || ''}" class="profile-photo" onerror="this.src='https://via.placeholder.com/80?text=PRO'">
+                    <div class="profile-info">
+                        <h3>${p.name}</h3>
+                        <div class="service">${p.service}</div>
+                        <div class="district">📍 ${p.district}</div>
+                    </div>
+                </div>
+                ${isVerified ? `
+                    <div class="rating">
+                        <span class="stars">${'★'.repeat(Math.round(p.rating.average))}${'☆'.repeat(5 - Math.round(p.rating.average))}</span>
+                        <span class="rating-text">${p.rating.average} (${p.rating.count} reviews)</span>
+                    </div>
+                ` : ''}
+                <div class="contact-info">
+                    <div>📧 ${p.email}</div>
+                    <div>📱 ${p.phone}</div>
+                </div>
+                <div class="action-buttons">
+                    <a href="tel:${p.phone}" class="btn btn-call">Voice Call</a>
+                    <a href="https://wa.me/250${p.phone.replace(/^0/, '')}" class="btn btn-whatsapp" target="_blank">WhatsApp</a>
+                </div>
+                ${isVerified ? `
+                    <button class="btn btn-document" onclick="window.open('${p.documentUrl}', '_blank')">Credentials Portfolio</button>
+                    <button class="btn btn-rate" onclick="openRatingModal('${p.id}')">Submit Feedback</button>
+                    ${p.comments && p.comments.length > 0 ? `<div style="margin-top:20px; font-size:13px; color:var(--text-light); border-top:1px solid var(--bg-light); padding-top:15px;">
+                        <strong>Recent Verification Feedback:</strong>
+                        ${p.comments.map(c => `<div style="margin-top:8px; font-style:italic;">"${c.comment}" — ${c.name}</div>`).join('')}
+                    </div>` : ''}
+                ` : ''}
+            `;
+            return card;
+        }
+
+        window.openRatingModal = (id) => { currentEngineerId = id; selectedRating = 0; document.getElementById('ratingModal').classList.add('active'); renderStars(); };
+        window.closeRatingModal = () => document.getElementById('ratingModal').classList.remove('active');
+        
+        function renderStars() {
+            const container = document.getElementById('starRating');
+            container.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                const s = document.createElement('span');
+                s.style = "cursor:pointer; font-size:32px; color:" + (i <= selectedRating ? '#f59e0b' : '#d1d5db');
+                s.textContent = '★';
+                s.onclick = () => { selectedRating = i; renderStars(); };
+                container.appendChild(s);
+            }
+        }
+
+        document.getElementById('ratingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (selectedRating === 0) return alert('Rating required');
+            await addDoc(collection(db, 'engineers_verified', currentEngineerId, 'ratings'), { stars: selectedRating, timestamp: serverTimestamp() });
+            const comment = document.getElementById('reviewComment').value;
+            if (comment.trim()) {
+                await addDoc(collection(db, 'engineers_verified', currentEngineerId, 'comments'), {
+                    name: document.getElementById('reviewerName').value,
+                    comment: comment,
+                    timestamp: serverTimestamp()
+                });
+            }
+            alert('Feedback recorded.'); closeRatingModal(); loadProfessionals();
+        });
+
+        loadProfessionals();
+    </script>
+
+    <script>
+        function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('active'); }
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('mobileMenu');
+            const btn = document.querySelector('.menu-btn');
+            if (menu.classList.contains('active') && !menu.contains(e.target) && !btn.contains(e.target)) menu.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
