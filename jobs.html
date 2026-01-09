@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,6 +61,7 @@
             font-weight: 800;
             letter-spacing: -0.5px;
             color: var(--primary-color);
+            text-decoration: none;
         }
 
         .menu-btn {
@@ -88,9 +90,8 @@
             color: var(--primary-color);
         }
 
-        /* Fixed Mobile Menu Logic */
+        /* Mobile Menu */
         .mobile-menu {
-            display: block;
             position: fixed;
             top: 0;
             right: 0;
@@ -107,82 +108,57 @@
             transform: translateX(0);
         }
 
-        .mobile-menu-header {
-            background: var(--bg-light);
-            padding: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--accent-border);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text-main);
-            font-size: 32px;
-            cursor: pointer;
-        }
-
         .mobile-menu nav {
             display: flex;
             flex-direction: column;
-            padding: 16px 0;
+            padding: 24px 0;
         }
 
         .mobile-menu nav a {
             padding: 16px 24px;
             border-bottom: 1px solid var(--bg-light);
             font-size: 16px;
-            color: var(--text-main);
         }
 
-        /* Hero Section */
-        .hero-jobs {
-            background: var(--secondary-color);
-            color: var(--white);
-            padding: 80px 24px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-jobs h1 {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            letter-spacing: -1px;
-        }
-
-        .hero-jobs p {
-            font-size: 18px;
-            color: rgba(255,255,255,0.7);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Form Styling */
+        /* Main Content */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 60px 24px;
         }
 
-        .section {
-            background: var(--white);
-            border-radius: 8px;
-            padding: 48px;
+        .page-header {
             margin-bottom: 48px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--secondary-color);
+            letter-spacing: -1.5px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 18px;
+        }
+
+        /* Job Form Section */
+        .form-section {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 60px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
 
-        .section-title {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--secondary-color);
-            margin-bottom: 32px;
-            border-left: 4px solid var(--primary-color);
-            padding-left: 20px;
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
         }
 
         .form-group {
@@ -192,104 +168,51 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: var(--secondary-color);
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: 700;
+            font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-        }
-
-        .required {
-            color: #ef4444;
+            color: var(--secondary-color);
         }
 
         input[type="text"],
         input[type="tel"],
-        select,
         textarea {
             width: 100%;
             padding: 14px;
             border: 1px solid var(--accent-border);
             border-radius: 4px;
             font-size: 15px;
-            transition: border-color 0.2s;
             background: var(--bg-light);
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            background: var(--white);
+            font-family: inherit;
         }
 
         textarea {
+            height: 120px;
             resize: vertical;
-            min-height: 140px;
         }
 
-        .file-input-label {
-            display: block;
-            padding: 24px;
-            background: var(--bg-light);
-            border: 2px dashed var(--accent-border);
-            border-radius: 4px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--text-light);
-            font-weight: 500;
-        }
-
-        .file-input-label:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 18px;
+        .btn-submit {
             background: var(--primary-color);
-            color: var(--white);
+            color: white;
+            padding: 18px 32px;
             border: none;
             border-radius: 4px;
-            font-size: 16px;
             font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
+            font-size: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
         }
 
-        .btn:hover {
+        .btn-submit:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
         }
 
-        /* Message Styling */
-        .message {
-            padding: 16px;
-            border-radius: 4px;
-            margin-bottom: 24px;
-            display: none;
-            font-weight: 500;
-            font-size: 15px;
-        }
-
-        .message.success {
-            background: #ecfdf5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-
-        .message.error {
-            background: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        /* Available Jobs Grid */
+        /* Jobs Grid */
         .jobs-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -300,53 +223,21 @@
             background: var(--white);
             border-radius: 8px;
             padding: 32px;
-            transition: all 0.3s ease;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
+            transition: all 0.3s ease;
         }
 
         .job-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
         }
 
-        .job-type {
-            font-size: 22px;
+        .job-title {
+            font-size: 20px;
             font-weight: 800;
             color: var(--secondary-color);
             margin-bottom: 12px;
-            line-height: 1.2;
-        }
-
-        .job-meta {
-            display: flex;
-            gap: 16px;
-            font-size: 13px;
-            color: var(--text-light);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 16px;
-        }
-
-        .job-budget {
-            background: #fef3c7;
-            color: #92400e;
-            padding: 6px 16px;
-            border-radius: 4px;
-            font-weight: 700;
-            font-size: 14px;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        .job-description {
-            color: var(--text-main);
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 24px;
-            flex-grow: 1;
+            letter-spacing: -0.5px;
         }
 
         .job-image {
@@ -354,7 +245,17 @@
             height: 200px;
             object-fit: cover;
             border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .job-description {
+            font-size: 14px;
+            color: var(--text-light);
             margin-bottom: 24px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .job-actions {
@@ -366,147 +267,87 @@
         .job-btn {
             padding: 12px;
             border-radius: 4px;
-            font-weight: 700;
             text-align: center;
             text-decoration: none;
-            font-size: 14px;
-            transition: all 0.2s;
+            font-weight: 700;
+            font-size: 13px;
             text-transform: uppercase;
         }
 
-        .btn-call {
-            background: var(--bg-light);
-            color: var(--secondary-color);
-            border: 1px solid var(--accent-border);
-        }
-
-        .btn-call:hover {
-            background: var(--white);
-            border-color: var(--secondary-color);
-        }
-
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-        }
-
-        .btn-whatsapp:hover {
-            background: #128c7e;
-        }
+        .btn-call { background: var(--bg-light); color: var(--secondary-color); border: 1px solid var(--accent-border); }
+        .btn-whatsapp { background: #25D366; color: white; }
 
         @media (max-width: 768px) {
-            header { height: 70px; }
-            nav { display: none; }
             .menu-btn { display: block; }
-            .hero-jobs h1 { font-size: 32px; }
-            .section { padding: 32px 24px; }
-            .jobs-grid { grid-template-columns: 1fr; }
-            .job-actions { grid-template-columns: 1fr; }
+            nav { display: none; }
+            .form-grid { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 32px; }
         }
     </style>
 </head>
 <body>
     <header>
         <div class="header-content">
-            <div class="logo">INZU</div>
+            <a href="index.html" class="logo">INZU</a>
             <button class="menu-btn" onclick="toggleMenu()">☰</button>
             <nav>
                 <a href="index.html">Home</a>
                 <a href="blogs.html">Market Insights</a>
-                <a href="professionals.html">Certified Professionals</a>
+                <a href="professionals.html">Directory</a>
                 <a href="services.html">Services</a>
-                <a href="jobs.html">Opportunities</a>
-                <a href="index.html#contact">Contact</a>
+                <a href="jobs.html">Jobs Board</a>
             </nav>
         </div>
     </header>
 
     <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-header">
-            <div class="logo">INZU</div>
-            <button class="close-btn" onclick="toggleMenu()">×</button>
-        </div>
         <nav>
-            <a href="index.html" onclick="toggleMenu()">Home</a>
-            <a href="blogs.html" onclick="toggleMenu()">Market Insights</a>
-            <a href="professionals.html" onclick="toggleMenu()">Certified Professionals</a>
-            <a href="services.html" onclick="toggleMenu()">Services</a>
-            <a href="jobs.html" onclick="toggleMenu()">Opportunities</a>
-            <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+            <a href="index.html">Home</a>
+            <a href="blogs.html">Market Insights</a>
+            <a href="professionals.html">Directory</a>
+            <a href="services.html">Services</a>
+            <a href="jobs.html">Jobs Board</a>
         </nav>
     </div>
 
-    <div class="hero-jobs">
-        <h1>Procurement & Jobs</h1>
-        <p>Post active requirements or bid for open construction projects across Rwanda.</p>
-    </div>
-
     <div class="container">
-        <div class="section">
-            <h2 class="section-title">Submit a Request</h2>
-            
-            <div id="formMessage" class="message"></div>
+        <div class="page-header">
+            <h1>Procurement Board</h1>
+            <p>Post tenders or apply for active construction projects across Rwanda.</p>
+        </div>
 
+        <section class="form-section">
+            <h2 style="margin-bottom: 24px;">Submit Procurement Notice</h2>
             <form id="jobForm">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                <div class="form-grid">
                     <div class="form-group">
-                        <label>Contact Name <span class="required">*</span></label>
-                        <input type="text" id="clientName" required placeholder="Full Name">
+                        <label>Notice Title</label>
+                        <input type="text" id="jobTitle" placeholder="e.g. Masonry for G+1 in Gasabo" required>
                     </div>
                     <div class="form-group">
-                        <label>Phone Number <span class="required">*</span></label>
-                        <input type="tel" id="clientPhone" required placeholder="07XX XXX XXX">
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
-                    <div class="form-group">
-                        <label>District <span class="required">*</span></label>
-                        <select id="district" required>
-                            <option value="">Select district</option>
-                        </select>
+                        <label>Your Name/Company</label>
+                        <input type="text" id="clientName" placeholder="Legal entity name" required>
                     </div>
                     <div class="form-group">
-                        <label>Requirement Type <span class="required">*</span></label>
-                        <select id="jobType" required>
-                            <option value="">Select specialized trade</option>
-                        </select>
+                        <label>Contact Phone</label>
+                        <input type="tel" id="clientPhone" placeholder="07XX XXX XXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Site Image (Optional)</label>
+                        <input type="file" id="jobImage" accept="image/*" style="padding: 10px; width: 100%; border: 1px solid var(--accent-border); border-radius: 4px;">
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label>Budget Allocation <span class="required">*</span></label>
-                    <input type="text" id="budget" required placeholder="e.g., 500,000 RWF">
+                    <label>Notice Details</label>
+                    <textarea id="jobDescription" placeholder="Outline specific requirements, location, and timelines..." required></textarea>
                 </div>
-
-                <div class="form-group">
-                    <label>Technical Specifications <span class="required">*</span></label>
-                    <textarea id="description" required placeholder="Detail the scope of work and specific requirements..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Documentation / Reference Image (Max 1MB)</label>
-                    <div class="file-input-wrapper" style="width: 100%;">
-                        <input type="file" id="jobImage" accept="image/*" style="display: none;">
-                        <label for="jobImage" class="file-input-label">
-                            Click to upload site photos or specifications
-                        </label>
-                    </div>
-                    <div id="imageFileName" style="font-size: 13px; margin-top: 8px; color: var(--text-light);"></div>
-                    <div id="fileSizeWarning" style="color: #ef4444; font-size: 12px; margin-top: 4px;"></div>
-                    <img id="imagePreview" style="max-width: 200px; border-radius: 4px; margin-top: 16px; display: none;" alt="Preview">
-                </div>
-
-                <button type="submit" class="btn" id="submitBtn">Publish Requirement</button>
+                <button type="submit" class="btn-submit" id="submitBtn">Publish Procurement Notice</button>
             </form>
-        </div>
+        </section>
 
-        <div class="section" style="background: transparent; box-shadow: none; padding: 0;">
-            <h2 class="section-title">Open Tenders & Requests</h2>
-            <div id="jobsContainer" class="jobs-grid">
-                <div class="loading" style="grid-column: 1/-1; text-align: center; padding: 60px;">Synchronizing tender database...</div>
+        <h2 style="margin-bottom: 32px; border-bottom: 2px solid var(--accent-border); padding-bottom: 12px;">Active Opportunities</h2>
+        <div id="jobsContainer" class="jobs-grid">
             </div>
-        </div>
     </div>
 
     <script type="module">
@@ -525,111 +366,106 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Populate districts
-        const districts = ["Gasabo", "Kicukiro", "Nyarugenge", "Bugesera", "Ruhango", "Huye", "Nyamagabe", "Muhanga", "Gisagara", "Rwamagana", "Gicumbi", "Musanze", "Rubavu", "Nyabihu", "Ngororero", "Karongi", "Rusizi", "Rutsiro", "Nyamasheke", "Kamonyi", "Nyanza", "Kayonza", "Ngoma", "Kirehe", "Gakenke", "Burera", "Rulindo"];
-        const districtSelect = document.getElementById('district');
-        districts.forEach(d => {
-            const opt = document.createElement('option');
-            opt.value = d; opt.textContent = d;
-            districtSelect.appendChild(opt);
-        });
-
-        // Populate job types
-        const jobTypes = ["Cost Estimator", "House Planner", "Draftsman", "Mason", "Carpenter", "Painter", "Tiler", "Roofer", "Welder", "Steel Fixer", "Driver (Equipment)", "Electrician", "Domestic Plumber", "Solar Technician", "CCTV Installer", "Alarm Technician", "Interior Designer", "Landscaper", "Cleaning Services", "Water Tank Installer", "AC Technician", "General Technician"];
-        const jobTypeSelect = document.getElementById('jobType');
-        jobTypes.forEach(t => {
-            const opt = document.createElement('option');
-            opt.value = t; opt.textContent = t;
-            jobTypeSelect.appendChild(opt);
-        });
-
-        document.getElementById('jobImage').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            const warning = document.getElementById('fileSizeWarning');
-            if (file && file.size > 1024 * 1024) {
-                warning.textContent = 'Documentation must be under 1MB.';
-                e.target.value = '';
-                document.getElementById('imagePreview').style.display = 'none';
-            } else if (file) {
-                warning.textContent = '';
-                document.getElementById('imageFileName').textContent = file.name;
+        // --- NEW COMPRESSION LOGIC ---
+        async function compressImage(file) {
+            return new Promise((resolve) => {
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    const preview = document.getElementById('imagePreview');
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                };
                 reader.readAsDataURL(file);
-            }
-        });
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const max_size = 1280; // Max dimension
 
+                        if (width > height) {
+                            if (width > max_size) {
+                                height *= max_size / width;
+                                width = max_size;
+                            }
+                        } else {
+                            if (height > max_size) {
+                                width *= max_size / height;
+                                height = max_size;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        // Resolve as JPEG with 0.7 quality to ensure size is < 1MB
+                        resolve(canvas.toDataURL('image/jpeg', 0.7));
+                    };
+                };
+            });
+        }
+
+        // --- UPDATED SUBMIT HANDLER ---
         document.getElementById('jobForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true; btn.textContent = 'Processing...';
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Synchronizing...';
 
             try {
                 const imageFile = document.getElementById('jobImage').files[0];
-                let imageBase64 = null;
+                let imageBase64 = '';
+
                 if (imageFile) {
-                    imageBase64 = await new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result);
-                        reader.readAsDataURL(imageFile);
-                    });
+                    // Compress before sending to Firestore
+                    imageBase64 = await compressImage(imageFile);
                 }
 
                 await addDoc(collection(db, 'jobs'), {
+                    title: document.getElementById('jobTitle').value,
+                    description: document.getElementById('jobDescription').value,
                     clientName: document.getElementById('clientName').value,
                     clientPhone: document.getElementById('clientPhone').value,
-                    district: document.getElementById('district').value,
-                    jobType: document.getElementById('jobType').value,
-                    budget: document.getElementById('budget').value,
-                    description: document.getElementById('description').value,
                     imageBase64: imageBase64,
                     timestamp: serverTimestamp()
                 });
 
-                document.getElementById('formMessage').textContent = 'Project published successfully.';
-                document.getElementById('formMessage').className = 'message success';
-                document.getElementById('formMessage').style.display = 'block';
+                alert('Success! Procurement notice published.');
                 document.getElementById('jobForm').reset();
-                document.getElementById('imagePreview').style.display = 'none';
                 loadJobs();
-            } catch (err) {
-                document.getElementById('formMessage').textContent = 'Submission error. Please try again.';
-                document.getElementById('formMessage').className = 'message error';
-                document.getElementById('formMessage').style.display = 'block';
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Transmission failed. Ensure image is not corrupt.');
             } finally {
-                btn.disabled = false; btn.textContent = 'Publish Requirement';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Publish Procurement Notice';
             }
         });
 
         async function loadJobs() {
             const container = document.getElementById('jobsContainer');
+            container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">Updating board...</div>';
+            
             try {
                 const q = query(collection(db, 'jobs'), orderBy('timestamp', 'desc'));
                 const snap = await getDocs(q);
+                
                 if (snap.empty) {
-                    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 40px;">No open tenders found.</div>';
+                    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-light); padding: 40px;">No active notices found.</div>';
                     return;
                 }
+
                 container.innerHTML = '';
-                snap.forEach(doc => {
-                    const job = doc.data();
-                    const date = job.timestamp ? new Date(job.timestamp.seconds * 1000).toLocaleDateString() : 'Active';
+                snap.forEach(docSnap => {
+                    const job = docSnap.data();
                     const card = document.createElement('div');
                     card.className = 'job-card';
                     card.innerHTML = `
-                        <div class="job-type">${job.jobType}</div>
-                        <div class="job-meta"><span>📍 ${job.district}</span><span>📅 ${date}</span></div>
-                        <div class="job-budget">RWF ${job.budget}</div>
+                        <div class="job-title">${job.title}</div>
                         ${job.imageBase64 ? `<img src="${job.imageBase64}" class="job-image" alt="Job">` : ''}
                         <div class="job-description">${job.description}</div>
                         <div style="font-size: 13px; color: var(--text-light); margin-bottom: 20px;">Client: <strong>${job.clientName}</strong></div>
                         <div class="job-actions">
                             <a href="tel:${job.clientPhone}" class="job-btn btn-call">Voice Call</a>
-                            <a href="https://wa.me/${job.clientPhone.replace(/^0/, '250')}" class="job-btn btn-whatsapp" target="_blank">WhatsApp</a>
+                            <a href="https://wa.me/250${job.clientPhone.replace(/^0/, '')}" class="job-btn btn-whatsapp" target="_blank">WhatsApp</a>
                         </div>
                     `;
                     container.appendChild(card);
